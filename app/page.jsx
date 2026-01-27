@@ -1,9 +1,13 @@
-import { Button } from "@/components/ui/button";
-import { Bell, Icon, LogIn, Rabbit, Shield } from "lucide-react";
+import AddProductForm from "@/components/AddProductForm";
+import AuthButton from "@/components/AuthButton";
+import { createClient } from "@/utils/supabase/server";
+import { Bell, Icon, LogIn, Rabbit, Shield, TrendingDown } from "lucide-react";
 import Image from "next/image";
 
-export default function Home() {
-  const user = null;
+export default async function Home() {
+  const supabase = await createClient();
+
+  const { data: {user},} = await supabase.auth.getUser();
 
   const products = [];
 
@@ -34,19 +38,18 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Image src={'/pricedip-logo.png'} alt="logo" width={600} height={200} className="h-10 w-auto" />
           </div>
-          <Button variant="default" size="sm" className="bg-background text-text hover:bg-orange-600 gap-2 ">
-            <LogIn className="w-4 h-4 "/>
-            Sign In
-            </Button>
+          <AuthButton user={user}/>
         </div>
       </header>
 
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-5xl font-bold text-text mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-background">Never Miss a Price Drop</h2>
-          <p className="text-xl text-text/70 mb-12 max-w-2xl mx-auto">
+          <h2 className="text-5xl font-bold text-text mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-background selection:bg-background selection:text-primary/50">Never Miss a Price Drop</h2>
+          <p className="text-xl text-text/70 mb-12 max-w-2xl mx-auto selection:bg-background selection:text-primary/50">
             Track prices from any e-commerce site. Get instant alerts when prices drop. Save money effortlessly.
           </p>
+
+          <AddProductForm user={user}/>
 
           {products.length === 0 && <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-16">
             {FEATURES.map(({icon: Icon, title,description})=>{
@@ -61,6 +64,19 @@ export default function Home() {
             </div>}
         </div>
       </section>
+      {user && products.length === 0 && (
+        <section className="max-w-2xl mx-auto px-4 pb-20 text-center">
+          <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12">
+            <TrendingDown className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No products yet
+            </h3>
+            <p className="text-gray-600">
+              Add your first product above to start tracking prices!
+            </p>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
