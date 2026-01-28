@@ -39,14 +39,14 @@ function AddProductForm({ user }) {
   };
   return (
     <>
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
+      <form onSubmit={handleSubmit} className="w-full bg-white text-text font-medium max-w-2xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-2 ">
           <Input
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Paste product URL (Amazon, Walmart, etc.)"
-            className="h-12 text-base"
+            className="h-12 text-base border border-text/20"
             required
             disabled={loading}
           />

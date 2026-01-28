@@ -1,16 +1,16 @@
 import AddProductForm from "@/components/AddProductForm";
 import AuthButton from "@/components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
-import { Bell, Icon, LogIn, Rabbit, Shield, TrendingDown } from "lucide-react";
-import Image from "next/image";
+import { Bell, Rabbit, Shield } from "lucide-react";
+import { getProducts } from "./actions";
+import ProductCard from "@/components/ProductCard";
 
 export default async function Home() {
   const supabase = await createClient();
 
   const { data: {user},} = await supabase.auth.getUser();
 
-  const products = [];
-
+  const products = user? await getProducts() : [];
   const FEATURES = [
     {
       icon: Rabbit,
@@ -32,11 +32,12 @@ export default async function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-linear-to-br from-primary/20 via-white to-primary/20">
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-10">
+    <main className="min-h-screen bg-linear-to-br from-primary/20 via-white to-primary/20 p-4">
+      <header className="bg-white/30 backdrop-blur-sm border border-gray-200 sticky top-4 z-10 rounded-4xl">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <Image src={'/pricedip-logo.png'} alt="logo" width={600} height={200} className="h-10 w-auto" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={'/pricedip-logo.png'} alt="logo" className="h-10 w-auto" />
           </div>
           <AuthButton user={user}/>
         </div>
@@ -52,7 +53,7 @@ export default async function Home() {
 
           {products.length === 0 && <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-16">
             {FEATURES.map(({icon: Icon, title,description})=>{
-              return <div key={title} className="bg-transparent p-6 rounded-xl border border-text/10">
+              return <div key={title} className=" p-6 rounded-xl border border-text/10">
                 <div className="w-12 h-12 bg-background rounded-lg flex items-center justify-center mb-4 mx-auto text-text">
                   <Icon className="w-6 h-6 text-primary" />
                 </div>
@@ -63,6 +64,20 @@ export default async function Home() {
             </div>}
         </div>
       </section>
+
+      {user && products.length > 0 && <section className="max-w-7xl mx-auto px-4 pb-20 ">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-2xl font-bold text-gray-900">Your Tracked Products</h3>
+
+          <span className="text-sm text-gray-500 font-semibold">
+            {products.length} {products.length === 1 ? "product" : "products" }
+          </span>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 items-start">
+          {products.map((product) => <ProductCard product={product} key={product.id} />)}
+        </div>
+      </section>}
+
       {user && products.length === 0 && (
         <section className="max-w-2xl mx-auto px-4 pb-20 text-center">
           <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12">
