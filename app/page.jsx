@@ -48,7 +48,6 @@ export default async function Home() {
           <p className="text-xl text-text/70 mb-12 max-w-2xl mx-auto selection:bg-background selection:text-primary/50">
             Track prices from any e-commerce site. Get instant alerts when prices drop. Save money effortlessly.
           </p>
-
           <AddProductForm user={user}/>
 
           {products.length === 0 && <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-16">
