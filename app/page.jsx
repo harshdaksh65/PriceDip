@@ -33,8 +33,8 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-linear-to-br from-primary/20 via-white to-primary/20 p-4">
-      <header className="bg-white/30 backdrop-blur-sm border border-gray-200 sticky top-4 z-10 rounded-4xl">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <header className="max-w-4xl mx-auto bg-white/30 backdrop-blur-sm border border-gray-200 sticky top-4 z-10 rounded-4xl">
+        <div className="px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={'/pricedip-logo.png'} alt="logo" className="h-10 w-auto" />
