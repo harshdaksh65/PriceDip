@@ -14,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   ExternalLink,
   Trash2,
-  TrendingDown,
   ChevronDown,
   ChevronUp,
   TrendingDownIcon,

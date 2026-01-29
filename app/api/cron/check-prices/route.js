@@ -36,15 +36,42 @@ export async function POST(request) {
 
     for (const product of products) {
       try {
-        const productData = await scrapeProduct(product.url);
+        /* --- TEST MODE: Use manual price from DB (start) --- */
+        // const { data: lastHistory, error: historyError } = await supabase
+        //   .from("price_history")
+        //   .select("price")
+        //   .eq("product_id", product.id)
+        //   .order("id", { ascending: false })
+        //   .limit(1)
+        //   .single();
+        //
+        // const oldPrice = lastHistory ? parseFloat(lastHistory.price) : parseFloat(product.current_price);
+        // const newPrice = parseFloat(product.current_price); // manual value
+        // const productData = {
+        //   currentPrice: newPrice,
+        //   currencyCode: product.currency,
+        //   productName: product.name,
+        //   productImageUrl: product.image_url,
+        // };
+        /* --- TEST MODE: Use manual price from DB (end) --- */
 
+        /* --- PRODUCTION MODE: Scrape price from product URL (start) --- */
+        const productData = await scrapeProduct(product.url);
         if (!productData.currentPrice) {
           results.failed++;
           continue;
         }
-
         const newPrice = parseFloat(productData.currentPrice);
-        const oldPrice = parseFloat(product.current_price);
+        // Fetch the last price from price_history for this product
+        const { data: lastHistory, error: historyError } = await supabase
+          .from("price_history")
+          .select("price")
+          .eq("product_id", product.id)
+          .order("id", { ascending: false })
+          .limit(1)
+          .single();
+        const oldPrice = lastHistory ? parseFloat(lastHistory.price) : parseFloat(product.current_price);
+        /* --- PRODUCTION MODE: Scrape price from product URL (end) --- */
 
         await supabase
           .from("products")
@@ -110,4 +137,4 @@ export async function GET() {
   });
 }
 
-// curl -X POST http://localhost:3000/api/cron/check-prices -H "Authorization: Bearer 0696ef7d02accbb0f96fdc1cd846b21c267bd81d8d0675b8bec026ccc88cd7c9"
+// curl -X POST https://pricedipdeals.vercel.app//api/cron/check-prices -H "Authorization: Bearer 0696ef7d02accbb0f96fdc1cd846b21c267bd81d8d0675b8bec026ccc88cd7c9"
