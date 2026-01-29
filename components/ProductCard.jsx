@@ -17,6 +17,7 @@ import {
   TrendingDown,
   ChevronDown,
   ChevronUp,
+  TrendingDownIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -69,7 +70,7 @@ export default function ProductCard({ product }) {
                  <span className="tracking-tighter">{getCurrencySymbol(product.currency)}{product.current_price}</span>
               </span>
               <Badge variant="secondary" className="gap-1">
-                <TrendingDown className="w-3 h-3" />
+                <TrendingDownIcon className="w-3 h-3" />
                 Tracking
               </Badge>
             </div>
